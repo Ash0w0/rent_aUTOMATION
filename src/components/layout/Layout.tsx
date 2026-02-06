@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Outlet, useLocation, Navigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore';
+import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { Loader2 } from 'lucide-react';
 
 const getPageTitle = (pathname: string): string => {
   const paths = {
@@ -26,43 +24,13 @@ const getPageTitle = (pathname: string): string => {
 };
 
 export const Layout: React.FC = () => {
-  const { user, isAuthenticated, isLoading } = useAuthStore();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
-  
+
   const toggleSidebar = () => {
     setIsMobileOpen(!isMobileOpen);
   };
-  
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
-      </div>
-    );
-  }
-  
-  // Redirect if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  // Redirect to correct dashboard based on user role
-  const basePath = user?.role === 'owner' ? '/owner' : '/tenant';
-  if (location.pathname === '/') {
-    return <Navigate to={basePath} replace />;
-  }
-  
-  // Check if user is accessing the correct section
-  const accessingCorrectSection = 
-    (user?.role === 'owner' && location.pathname.startsWith('/owner')) ||
-    (user?.role === 'tenant' && location.pathname.startsWith('/tenant'));
-  
-  if (!accessingCorrectSection) {
-    return <Navigate to={basePath} replace />;
-  }
-  
+
   const pageTitle = getPageTitle(location.pathname);
   
   return (
