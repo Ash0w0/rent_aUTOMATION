@@ -21,6 +21,7 @@ interface AuthState {
   logout: () => Promise<void>;
   clearError: () => void;
   initialize: () => Promise<void>;
+  setUser: (user: User) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -121,5 +122,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       console.error('Error initializing auth:', error);
       set({ isLoading: false });
     }
+  },
+  setUser: (user: User) => {
+    set({
+      user,
+      isAuthenticated: true,
+      error: null,
+    });
   },
 }));

@@ -9,19 +9,19 @@ interface SidebarProps {
   setIsMobileOpen: (isOpen: boolean) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ 
-  isMobileOpen, 
-  setIsMobileOpen 
+export const Sidebar: React.FC<SidebarProps> = ({
+  isMobileOpen,
+  setIsMobileOpen
 }) => {
   const { user, logout } = useAuthStore();
   const { getUnreadCount } = useNotificationStore();
-  
+
   const unreadCount = user ? getUnreadCount(user.id) : 0;
-  
+
   const closeMobileMenu = () => {
     setIsMobileOpen(false);
   };
-  
+
   const ownerLinks = [
     { to: '/owner', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/owner/rooms', label: 'Rooms', icon: <Key size={20} /> },
@@ -29,15 +29,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { to: '/owner/maintenance', label: 'Maintenance', icon: <Tool size={20} /> },
     { to: '/owner/payments', label: 'Payments', icon: <CreditCard size={20} /> },
   ];
-  
+
   const tenantLinks = [
     { to: '/tenant', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/tenant/profile', label: 'My Profile', icon: <User size={20} /> },
     { to: '/tenant/payments', label: 'Payments', icon: <CreditCard size={20} /> },
     { to: '/tenant/maintenance', label: 'Maintenance', icon: <Tool size={20} /> },
   ];
-  
+
   const links = user?.role === 'owner' ? ownerLinks : tenantLinks;
+
+  const handleLogout = () => {
+    logout();
+    closeMobileMenu();
+  };
   
   return (
     <>
@@ -138,10 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <li>
                   <button
                     className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200"
-                    onClick={() => {
-                      logout();
-                      closeMobileMenu();
-                    }}
+                    onClick={handleLogout}
                   >
                     <span className="mr-3 text-gray-500">
                       <LogOut size={20} />

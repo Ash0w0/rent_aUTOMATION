@@ -13,9 +13,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar, title }) => {
   const { user } = useAuthStore();
   const { getUnreadCount } = useNotificationStore();
   const navigate = useNavigate();
-  
+
   const unreadCount = user ? getUnreadCount(user.id) : 0;
   const notificationsPath = user?.role === 'owner' ? '/owner/notifications' : '/tenant/notifications';
+  const userName = user?.full_name || 'User';
+  const userRole = user?.role || 'user';
   
   return (
     <header className="bg-white shadow-sm sticky top-0 z-10">
@@ -52,17 +54,17 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar, title }) => {
             <div className="relative">
               <img
                 className="h-8 w-8 rounded-full object-cover"
-                src={user?.profileImage || `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random`}
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=random`}
                 alt="User profile"
               />
             </div>
-            
+
             <div className="hidden md:block">
               <div className="text-sm font-medium text-gray-900">
-                {user?.name}
+                {userName}
               </div>
               <div className="text-xs text-gray-500 capitalize">
-                {user?.role}
+                {userRole}
               </div>
             </div>
           </div>
